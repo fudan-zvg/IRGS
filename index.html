@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IRGS</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/dics.min.css">
+    <!-- <link rel="stylesheet" href="css/bulma.min.css"> -->
+    <script src="scripts/dics.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', domReady);
+        function domReady() {
+            for (const e of document.querySelectorAll(".b-dics")) {
+                new Dics({
+                    container: e,
+                    textPosition: "top"
+                });
+            }
+        }
+    </script>
+    <link rel="shortcut icon" href="img/render_env_icon.png" type="image/x-icon" />
+</head>
+
+<body>
+    <section>
+        <div class="text-center mt-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>IRGS: Inter-Reflective Gaussian Splatting with 2D Gaussian Ray Tracing</h1>
+                        <hr>
+                            <h5><a href="https://sulvxiangxin.github.io/" target="_blank">Chun Gu</a>, 
+                            Xiaofei Wei, 
+                            Zixuan Zeng, 
+                            Yuxuan Yao, 
+                            <a href="https://lzrobots.github.io/" target="_blank">Li Zhang</a></h5>
+                        <h5 style="color:#000000;">School of Data Science, Fudan University</h5>
+                        <br>
+                        <p>
+                            <a class="btn btn-secondary btn-lg" href="" role="button">Paper</a> 
+                            <a class="btn btn-secondary btn-lg" href="https://github.com/fudan-zvg/IRGS" role="button">Code</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <video width="100%" playsinline="" autoplay="" loop="" preload="" muted="">
+                <source src="img/videos/teaser.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+    <br>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+
+                    <h2>Abstract</h2>
+                    <hr style="margin-top:0px">
+
+                    <!-- <div class="b-row">
+                        <div class="b-dics" style="width: 100%">
+                            <img src="img/point.png" alt="Point" />
+                            <img src="img/normal.png" alt="Normal" />
+                        </div>
+                        <div class="b-dics" style="width: 100%">
+                            <img src="img/render.png" alt="Render" />
+                            <img src="img/pbr_env.png" alt="Relighting" />
+                        </div>
+                    </div> -->
+                    <br>
+
+                    <p class="text-justify">In inverse rendering, accurately modeling visibility and indirect radiance for incident light is essential for capturing secondary effects. Due to the absence of a powerful Gaussian ray tracer, previous 3DGS-based methods have either adopted a simplified rendering equation or used learnable parameters to approximate incident light, resulting in inaccurate material and lighting estimations. To this end, we introduce <b>inter-reflective Gaussian splatting</b> (<b>IRGS</b>) for inverse rendering. To capture inter-reflection, we apply the full rendering equation without simplification and compute incident radiance on the fly using the proposed differentiable <b>2D Gaussian ray tracing</b>. Additionally, we present an efficient optimization scheme to handle the computational demands of Monte Carlo sampling for rendering equation evaluation. Furthermore, we introduce a novel strategy for querying the indirect radiance of incident light when relighting the optimized scenes. Extensive experiments on multiple standard benchmarks validate the effectiveness of IRGS, demonstrating its capability to accurately model complex inter-reflection effects.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <br>
+    <br>
+    <br>
+
+    <section>
+        <div class="container">
+
+            <div class="row" style="margin-top:5px">
+                <div class="col-12 text-center">
+                    <h2>Method Overview</h2>
+                    <hr style="margin-top:0px">
+                </div>
+            </div>
+            <img class="img-fluid" src="img/pipeline.png" alt="">
+            <br>
+            <br>
+            <br>
+            <p class="text-justify">
+                <b>Schematic illustration of the proposed IRGS.</b> Starting from a set of 2D Gaussians equipped with material properties, we apply rasterization to generate albedo, roughness, position, and normal maps. We then evaluate the rendering equation using stratified sampling at the corresponding position, drawing geometry and material values from these feature maps. The radiance of incident light is decomposed into direct radiance  from the environment map, and indirect radiance  with visibility, obtained via 2D Gaussian ray tracing.
+            </p>
+
+            <ul>
+                <li><b>2D Gaussian ray tracing</b>, a technique that enables direct ray tracing on pretrained 2D Gaussian splatting with minimal quality degradation.
+                </li>
+                <li><b>IRGS</b>, an inverse rendering framework that incorporates the full rendering equation without simplification, using 2D Gaussian ray tracing to compute incident radiance on the fly.
+                </li>
+                <li>An optimization scheme that manages computational demands for rendering equation evaluation.
+                </li>
+                <li>A novel strategy that enables querying of indirect radiance during relighting.
+                </li>
+            </ul>
+
+        </div>
+    </section>
+    <br>
+    <br>
+    <br>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2>2D Gaussian ray tracing</h2>
+                </div>
+            </div>
+            <hr style="margin-top:0px">
+            <img class="img-fluid" src="img/raytracing-splatting.png" alt="">
+            <p class="text-center">Performance of directly applying Gaussian ray tracing on a pretrained Gaussian splatting checkpoint in 3D Gaussian and 2D Gaussian cases, respectively.</p>
+            <p class="text-justify">
+                Applying ray tracing directly on a 3DGS checkpoint results in a noticeable decline in rendering quality compared to splatting. To address this issue, we propose <b>2D Gaussian ray tracing</b> (<b>2DGRT</b>), which performs ray tracing on 2D Gaussian primitives. Since 2D Gaussian disks have a well-defined ray-splat intersection, this approach eliminates inconsistencies in intersection points present in 3D Gaussians. Our proposed 2DGRT achieves significantly less quality degradation than 3DGRT in both quantitative metrics and visual results.
+            </p>
+        </div>
+    </section>
+    <br>
+    <br>
+    <br>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2>Results on Synthetic4Relight dataset</h2>
+                </div>
+            </div>
+            <hr style="margin-top:0px">
+            <img class="img-fluid" src="img/exp_syn4_relight.png" alt="">
+            <p class="text-center">Qualitative comparison of NVS, material and lighting estimation, and relighting results on the Synthetic4Relight dataset.</p>
+            <br>
+            <br>
+            
+            <div class="b-row">
+                <figure style="text-align: center;">
+                    <video width="100%" playsinline="" autoplay="" loop="" preload="" muted="">
+                    <source src="img/videos/demo_syn4.mp4" type="video/mp4">
+                    </video>
+                </figure>
+            </div>
+        </div>
+    </section>
+    <br>
+    <br>
+    <br>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2>Results on Synthetic4Relight dataset</h2>
+                </div>
+            </div>
+            <hr style="margin-top:0px">
+            <img class="img-fluid" src="img/exp_tensoir_relight.png" alt="">
+            <p class="text-center">Qualitative comparison of relighting results on TensoIR dataset.</p>
+            
+            <br>
+            <br>
+            <div class="b-row">
+                <figure style="text-align: center;">
+                    <video width="100%" playsinline="" autoplay="" loop="" preload="" muted="">
+                    <source src="img/videos/demo_tensoir.mp4" type="video/mp4">
+                    </video>
+                </figure>
+            </div>
+        </div>
+        
+    </div>
+    </section>
+    <br>
+    <br>
+    <br>
+
+    <footer class="text-center">
+        <div class="container">
+            <div class="row ">
+                <div class="col-12">
+                    <h2>Citation</h2>
+                    <hr style="margin-top:0px">
+                    <div class="bibtexsection">
+                        <pre><code>
+    @article{gu2024IRGS,
+        title     = {IRGS: Inter-Reflective Gaussian Splatting with 2D Gaussian Ray Tracing},
+        author    = {Gu, Chun and Wei, Xiaofei and Zeng, Zixuan and Yao, Yuxuan and Zhang, Li},
+        journal   = {arXiv preprint},
+        year      = {2024},
+    }
+                        </code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <br>
+
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <p>
+                Acknowledgements: The website template was borrowed from <a href="https://lioryariv.github.io/idr/">Lior Yariv</a>.
+                Image sliders are based on <a href="https://github.com/abelcabezaroman/definitive-image-comparison-slider">dics</a>.
+            </p>
+        </div>
+    </div>
+    <br>
+    <br>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap-4.4.1.js"></script>
+</body>
+</html>
