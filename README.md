@@ -98,7 +98,7 @@ CUDA_VISIBLE_DEVICES=0 python eval_relighting_tensoir.py -m outputs/TensoIR_Synt
 
 ## 📜 BibTeX
 ```bibtex
-@article{gu2024IRGS,
+@inproceedings{gu2024IRGS,
   title={IRGS: Inter-Reflective Gaussian Splatting with 2D Gaussian Ray Tracing},
   author={Gu, Chun and Wei, Xiaofei and Zeng, Zixuan and Yao, Yuxuan and Zhang, Li},
   booktitle={CVPR},
