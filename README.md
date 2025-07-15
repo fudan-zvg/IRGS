@@ -3,6 +3,7 @@
 
 > [**IRGS: Inter-Reflective Gaussian Splatting with 2D Gaussian Ray Tracing**](https://arxiv.org/abs/2412.15867),            
 > [Chun Gu](https://sulvxiangxin.github.io/), Xiaofei Wei, Zixuan Zeng, Yuxuan Yao, [Li Zhang](https://lzrobots.github.io)  
+> **Shanghai Innovation Institute; School of Data Science, Fudan University**  
 > **CVPR 2025**
 
 **Official implementation of "IRGS: Inter-Reflective Gaussian Splatting with 2D Gaussian Ray Tracing".** 
